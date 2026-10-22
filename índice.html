@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>USSS030624 - Sistema de Gestión</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --glass-bg: rgba(30, 41, 59, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --primary: #06b6d4; /* Turquesa */
+            --primary-hover: #0891b2;
+            --text-light: #f8fafc;
+            --text-muted: #94a3b8;
+            --danger: #f43f5e;
+            --danger-hover: #e11d48;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Outfit', sans-serif; }
+
+        body { 
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(6, 182, 212, 0.15), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.15), transparent 25%);
+            color: var(--text-light); 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            padding: 20px;
+        }
+
+        /* Contenedor principal */
+        .panel { 
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            padding: 40px; 
+            border-radius: 16px; 
+            width: 100%; 
+            max-width: 950px; 
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); 
+            transition: max-width 0.3s ease;
+        }
+
+        .panel.login-mode {
+            max-width: 420px;
+            border-top: 4px solid var(--primary);
+            text-align: center;
+        }
+
+        .hide { display: none !important; }
+
+        /* Títulos */
+        h2 { font-weight: 700; color: var(--text-light); margin-bottom: 10px; }
+        .login-subtitle { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 30px; }
+        
+        /* Header Panel */
+        .header-panel { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 25px; 
+            padding-bottom: 15px; 
+            border-bottom: 1px solid var(--glass-border);
+        }
+        .header-panel h2 { font-size: 1.6rem; background: linear-gradient(to right, #06b6d4, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0;}
+        .user-info { font-size: 0.9rem; color: var(--text-muted); }
+        .user-info b { color: var(--primary); }
+        .btn-logout { 
+            color: var(--danger); 
+            text-decoration: none; 
+            font-weight: 600; 
+            margin-left: 15px; 
+            padding: 5px 10px; 
+            border-radius: 6px; 
+            transition: 0.3s;
+            border: 1px solid transparent;
+        }
+        .btn-logout:hover { background: rgba(244, 63, 94, 0.1); border-color: rgba(244, 63, 94, 0.3); }
+
+        /* --- NUEVO DISEÑO DEL FORMULARIO --- */
+        .form-card {
+            background: rgba(15, 23, 42, 0.4); /* Fondo más oscuro para la tarjeta del form */
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .form-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 20px; 
+            margin-bottom: 25px; 
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .input-group label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            margin-left: 4px;
+        }
+        
+        /* Inputs */
+        input[type="text"], input[type="password"] { 
+            padding: 12px 16px; 
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid var(--glass-border); 
+            border-radius: 8px; 
+            font-size: 0.95rem; 
+            color: var(--text-light);
+            outline: none; 
+            transition: all 0.3s;
+            width: 100%;
+        }
+        input[type="text"]::placeholder, input[type="password"]::placeholder { color: #475569; }
+        input[type="text"]:focus, input[type="password"]:focus { 
+            border-color: var(--primary); 
+            box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.15); 
+            background: rgba(15, 23, 42, 0.9);
+        }
+
+        /* Botones */
+        button { 
+            background: var(--primary); 
+            color: #000; 
+            border: none; 
+            padding: 14px 20px; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-weight: 700;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            width: 100%; 
+        }
+        button:hover { background: var(--primary-hover); box-shadow: 0 0 15px rgba(6, 182, 212, 0.4); }
+        
+        /* Botones específicos del panel */
+        .panel button { width: auto; padding: 12px 20px; }
+        
+        button.btn-danger { background: var(--danger); color: white; }
+        button.btn-danger:hover { background: var(--danger-hover); box-shadow: 0 0 15px rgba(244, 63, 94, 0.4); }
+        button.btn-gray { background: rgba(148, 163, 184, 0.15); color: var(--text-light); border: 1px solid rgba(148, 163, 184, 0.3); }
+        button.btn-gray:hover { background: rgba(148, 163, 184, 0.3); box-shadow: none; }
+        
+        .action-btns button { padding: 6px 12px; font-size: 0.8rem; margin-right: 5px; text-transform: none; }
+
+        /* Tabla */
+        .search-bar { margin-bottom: 20px; width: 100%; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.95rem; }
+        th, td { padding: 14px 15px; text-align: left; border-bottom: 1px solid var(--glass-border); }
+        th { font-weight: 600; color: var(--primary); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
+        tbody tr { transition: background 0.2s; }
+        tbody tr:hover { background: rgba(255, 255, 255, 0.03); }
+        
+        .err { color: var(--danger); font-weight: 500; margin-bottom: 15px; min-height: 20px; text-shadow: 0 0 10px rgba(244, 63, 94, 0.5); }
+        
+        @media (max-width: 650px) { 
+            .form-grid { grid-template-columns: 1fr; } 
+            .panel { padding: 25px; }
+            .form-card { padding: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Condicional para aplicar clase 'login-mode' si estamos en la vista de login -->
+    <div class="panel {% if page == 'login' %}login-mode{% endif %}">
+        
+        <!-- VISTA LOGIN -->
+        <div id="v-login" class="{% if page != 'login' %}hide{% endif %}">
+            <div style="font-size: 3rem; margin-bottom: 10px;">🔒</div>
+            <h2>Bienvenido</h2>
+            <p class="login-subtitle">Ingresa tus credenciales para acceder al sistema</p>
+            
+            <p id="err-msg" class="err"></p>
+            
+            <div style="margin-bottom: 15px;">
+                <input type="text" id="u" placeholder="Usuario">
+            </div>
+            <div style="margin-bottom: 30px;">
+                <input type="password" id="p" placeholder="Contraseña">
+            </div>
+            
+            <button onclick="login()">INGRESAR AL SISTEMA</button>
+        </div>
+
+        <!-- VISTA PANEL ADMIN -->
+        <div id="v-panel" class="{% if page != 'panel' %}hide{% endif %}">
+            <div class="header-panel">
+                <h2>Gestión de Usuarios</h2>
+                <div class="user-info">
+                    Conectado: <b>{{ session.get('activo') }}</b>
+                    <a href="/logout" class="btn-logout">Cerrar Sesión</a>
+                </div>
+            </div>
+
+            <!-- NUEVO DISEÑO DEL FORMULARIO -->
+            <div class="form-card">
+                <div class="form-title">
+                    <span id="form-icon">➕</span> <span id="form-text">Registrar Nuevo Usuario</span>
+                </div>
+
+                <input type="hidden" id="e-id">
+                
+                <div class="form-grid">
+                    <div class="input-group">
+                        <label>Nombre de Usuario</label>
+                        <input type="text" id="f-user" placeholder="Ej. juan123">
+                    </div>
+                    <div class="input-group">
+                        <label>Contraseña</label>
+                        <input type="text" id="f-pass" placeholder="••••••••">
+                    </div>
+                    <div class="input-group">
+                        <label>Nombre Completo</label>
+                        <input type="text" id="f-name" placeholder="Ej. Juan Pérez">
+                    </div>
+                    <div class="input-group">
+                        <label>Dirección</label>
+                        <input type="text" id="f-dir" placeholder="Ej. San Salvador">
+                    </div>
+                    <div class="input-group">
+                        <label>Teléfono</label>
+                        <input type="text" id="f-tel" placeholder="Ej. 7777-8888">
+                    </div>
+                    <!-- Contenedor de botones -->
+                    <div class="input-group" style="justify-content: flex-end; flex-direction: row; gap: 10px; align-items: flex-end;">
+                        <button onclick="save()" style="flex: 2;">Guardar Datos</button>
+                        <button onclick="reset()" id="btn-cancel" class="hide btn-gray" style="flex: 1;">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BARRA DE BÚSQUEDA Y TABLA -->
+            <input type="text" id="search" class="search-bar" placeholder="🔍 Buscar usuario por nombre o cuenta..." onkeyup="load()">
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Usuario</th>
+                        <th>Nombre</th>
+                        <th>Dirección</th>
+                        <th>Teléfono</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tb"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+    
+    <!-- Pequeño script para cambiar el título del form cuando se edita -->
+    <script>
+        const originalEdit = window.edit;
+        window.edit = function(id, u, p, n, d, t) {
+            document.getElementById('form-icon').innerText = "✏️";
+            document.getElementById('form-text').innerText = "Editar Usuario";
+            originalEdit(id, u, p, n, d, t);
+        };
+
+        const originalReset = window.reset;
+        window.reset = function() {
+            document.getElementById('form-icon').innerText = "➕";
+            document.getElementById('form-text').innerText = "Registrar Nuevo Usuario";
+            originalReset();
+        };
+    </script>
+</body>
+</html>
